@@ -16,14 +16,13 @@ import random
 os.environ['PYTHONHASHSEED'] = '0'
 np.random.seed(7)
 random.seed(7)
-session_conf = tf.compat.v1.ConfigProto(
+session_conf = tf.ConfigProto(
     intra_op_parallelism_threads=1,
     inter_op_parallelism_threads=1
 )
-tf.compat.v1.set_random_seed(7)
-sess = tf.compat.v1.Session(graph=tf.compat.v1.get_default_graph(), config=session_conf)
-#k.set_session(sess)
-tf.compat.v1.keras.backend.set_session(sess)
+tf.set_random_seed(7)
+sess = tf.Session(graph=tf.get_default_graph(), config=session_conf)
+k.set_session(sess)
 
 class MLP:
     """
