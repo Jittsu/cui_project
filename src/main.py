@@ -64,6 +64,7 @@ for intent in y:
         i += 1
 y_id = [y2id[intent] for intent in y]
 y_onehot = np_utils.to_categorical(y_id, len(collections.Counter(y)))
+scores = []
 for train_idx, test_idx in skf.split(x, y):
     tv = TokenVectorizer(list(x[train_idx]), use_pos=[], stopword=True, stemming=True, as_numpy=True)
     train_vec = tv.vectorizer()
@@ -71,6 +72,10 @@ for train_idx, test_idx in skf.split(x, y):
     mlp = MLP(in_seq=in_seq_size, out_vec_size=len(collections.Counter(y)), dropout_rate=0.2, loss=MODEL_PARAMS['loss'], optimizer=MODEL_PARAMS['optimizer'])
     model = mlp.build_model()
     model.fit(train_vec, y_onehot[train_idx], batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
+    test_vec = tv.vectorizer(x[test_idx])
+    score = model.evaluate(test_vec, y_onehot[test_idx])
+    scores.append(score)
+    print(f'SCORE: {score}')
     model.save(f'./models/mlp_split{split_cnt}.h5', include_optimizer=False)
     split_cnt += 1
 
