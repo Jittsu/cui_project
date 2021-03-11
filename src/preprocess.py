@@ -216,7 +216,7 @@ class TokenVectorizer:
                 if str_bow == '':
                     str_bow = word
                 else:
-                    str_bow = str_bow + ' ' + word
+                    str_bow = str_bow + ';' + word
             ret_value.append(str_bow)
         return ret_value
 
@@ -228,9 +228,9 @@ class TokenVectorizer:
                 forMultiDict[bow] = str(label)
             else:
                 lstr = forMultiDict[bow]
-                multi_label_list = lstr.split(' ')
+                multi_label_list = lstr.split(';')
                 if not label in multi_label_list:
-                    multi_label = lstr + ' ' + label
+                    multi_label = lstr + ';' + label
                     forMultiDict[bow] = multi_label
                 else:
                     pass
