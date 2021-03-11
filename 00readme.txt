@@ -1,0 +1,29 @@
+単一除去
+スライドのパターン1はpat1、パターン2はv1、パターン3はv2のこと
+train_mlp_clearlabeling*.py: trainデータにclear, unclear, impossibleのラベルをつける
+train_cui*.py: trainデータについたclear, unclear, impossibleラベルを用いて3値分類のモデルを学習する
+predict_cui.py: unknownデータに対してclear, unclear, impossibleを予測する
+predict_classification_per_cui.py: 本来のラベル分類精度を上記コードによって付与された3値それぞれについて精度を確認する
+cuipredict4tests/*.py: 他のtestデータに対してclear, unclear, impossibleを予測する
+cuipredict4tests/*_classification.py: 他のtestデータに対して本来のラベル分類精上記コードによって付与された3値それぞれについて精度を確認する
+model_os_pat1.h5,model_os_v1.h5,model_os_v2.h5
+model_os_pat1_all.h5
+
+その他このディレクトリで使用されるコード
+make_onlyja_data.py
+rm_noun_verb_preprocess.py
+rm_noun_verb_create_bow.py
+create_multi_label.py
+
+複数除去
+rm_noun_verb_create_bow_multi.py
+create_multi_label_multi.py
+train_mlp_clearlabeling_multi.py
+train_mlp_clearlabeling_formulti_v1_multi.py
+train_mlp_clearlabeling_formulti_v2_multi.py
+train_cui_kfold_oversampling_multi.py train_cui_all_multi.py
+model_os_pat1_rm2.h5,model_os_v1_rm2.h5,model_os_v2_rm2.h5
+model_os_pat1_all_rm2.h5
+
+単一除去と複数除去の合体(pat1のみ)
+train_cui_all_rm12.py -> ./models/model_os_pat1_all_rm12.h5
