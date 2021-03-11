@@ -74,8 +74,8 @@ for train_idx, test_idx in skf.split(x, y):
     model.fit(train_vec, y_onehot[train_idx], batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
     test_vec = tv.vectorizer(x[test_idx])
     score = model.evaluate(test_vec, y_onehot[test_idx])
-    scores.append(score)
-    print(f'SCORE: {score}')
+    scores.append(score[1])
+    print(f'SCORE: {score[1]}')
     model.save(f'../models/mlp_split{split_cnt}.h5', include_optimizer=False)
     split_cnt += 1
 
