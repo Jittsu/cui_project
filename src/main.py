@@ -84,6 +84,7 @@ for train_idx, test_idx in skf.split(x, y):
     rm_nv_vectors, rm_nv_labels = tv.rm_nv_vectorizer(y[train_idx])
     multi_label_dict = tv.create_multi_label(rm_nv_tokens, rm_nv_labels)
     rm_nv_multi_labels = []
+    rm_nv_tokens = tv.list2str(rm_nv_tokens)
     for token in rm_nv_tokens:
         multi_label = multi_label_dict[token]
         rm_nv_multi_labels.append(multi_label)
