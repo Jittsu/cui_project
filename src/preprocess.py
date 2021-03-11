@@ -229,7 +229,7 @@ class TokenVectorizer:
             else:
                 lstr = forMultiDict[bow]
                 multi_label_list = lstr.split(';')
-                if not label in multi_label_list:
+                if not str(label) in multi_label_list:
                     multi_label = lstr + ';' + str(label)
                     forMultiDict[bow] = multi_label
                 else:
