@@ -62,7 +62,7 @@ for intent in y:
         y2id[intent] = i
         id2y[i] = intent
         i += 1
-y_id = [[y2id[intent]] for intent in y]
+y_id = np.array([y2id[intent] for intent in y])
 y_onehot = np_utils.to_categorical(y_id, len(collections.Counter(y)))
 scores = []
 for train_idx, test_idx in skf.split(x, y):
