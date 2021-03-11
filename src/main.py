@@ -82,7 +82,6 @@ for train_idx, test_idx in skf.split(x, y):
     # CUI訓練用データ作成部 ---
     rm_nv_tokens, _ = tv.rm_nv_tokenizer(y[train_idx])
     rm_nv_vectors, rm_nv_labels = tv.rm_nv_vectorizer(y[train_idx])
-    rm_nv_tokens = tv.list2str(rm_nv_tokens)
     multi_label_dict = tv.create_multi_label(rm_nv_tokens, rm_nv_labels)
     rm_nv_multi_labels = []
     for token in rm_nv_tokens:
