@@ -222,7 +222,7 @@ class TokenVectorizer:
 
     def create_multi_label(self, data, labels) -> dict:
         forMultiDict = {}
-        data = list2str(data)
+        data = self.list2str(data)
         for bow, label in zip(data, labels):
             if not bow in forMultiDict:
                 forMultiDict[bow] = str(label)

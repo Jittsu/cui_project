@@ -71,12 +71,12 @@ for train_idx, test_idx in skf.split(x, y):
     in_seq_size = len(train_vec[0])
     model = MLP(in_seq=in_seq_size, out_vec_size=len(collections.Counter(y)), dropout_rate=0.2, loss=MODEL_PARAMS['loss'], optimizer=MODEL_PARAMS['optimizer'])
     mlp = model.build_model()
-    mlp.fit(train_vec, y_onehot[train_idx], batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
+    #mlp.fit(train_vec, y_onehot[train_idx], batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
     test_vec = tv.vectorizer(x[test_idx])
-    score = mlp.evaluate(test_vec, y_onehot[test_idx])
-    scores.append(score[1])
-    print(f'SCORE: {score[1]}')
-    mlp.save(f'../models/mlp_split{split_cnt}.h5', include_optimizer=False)
+    #score = mlp.evaluate(test_vec, y_onehot[test_idx])
+    #scores.append(score[1])
+    #print(f'SCORE: {score[1]}')
+    #mlp.save(f'../models/mlp_split{split_cnt}.h5', include_optimizer=False)
     split_cnt += 1
 
     # CUI訓練用データ作成部 ---
