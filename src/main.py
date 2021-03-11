@@ -69,18 +69,28 @@ for train_idx, test_idx in skf.split(x, y):
     tv = TokenVectorizer(list(x[train_idx]), use_pos=[], stopword=True, stemming=True, as_numpy=True)
     train_vec = tv.vectorizer()
     in_seq_size = len(train_vec[0])
-    mlp = MLP(in_seq=in_seq_size, out_vec_size=len(collections.Counter(y)), dropout_rate=0.2, loss=MODEL_PARAMS['loss'], optimizer=MODEL_PARAMS['optimizer'])
-    model = mlp.build_model()
-    model.fit(train_vec, y_onehot[train_idx], batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
+    model = MLP(in_seq=in_seq_size, out_vec_size=len(collections.Counter(y)), dropout_rate=0.2, loss=MODEL_PARAMS['loss'], optimizer=MODEL_PARAMS['optimizer'])
+    mlp = model.build_model()
+    mlp.fit(train_vec, y_onehot[train_idx], batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
     test_vec = tv.vectorizer(x[test_idx])
-    score = model.evaluate(test_vec, y_onehot[test_idx])
+    score = mlp.evaluate(test_vec, y_onehot[test_idx])
     scores.append(score[1])
     print(f'SCORE: {score[1]}')
-    model.save(f'../models/mlp_split{split_cnt}.h5', include_optimizer=False)
+    mlp.save(f'../models/mlp_split{split_cnt}.h5', include_optimizer=False)
     split_cnt += 1
 
-# CUI訓練用データ作成部 ---
+    # CUI訓練用データ作成部 ---
+    rm_nv_tokens, _ = tv.rm_nv_tokenizer(y[train_idx])
+    rm_nv_vectors, rm_nv_labels = tv.rm_nv_vectorizer(y[train_idx])
+    rm_nv_tokens = tv.list2str(rm_nv_tokens)
+    multi_label_dict = tv.create_multi_label(rm_nv_tokens, rm_nv_labels)
+    rm_nv_multi_labels = []
+    for token in rm_nv_tokens:
+        multi_label = multi_label_dict[token]
+        rm_nv_multi_labels.append(multi_label)
+    print(rm_nv_multi_labels)
+    break
 
-# CUI分類モデル作成部 ---
+    # CUI分類モデル作成部 ---
 
 # 予測部
