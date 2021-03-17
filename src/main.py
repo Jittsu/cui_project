@@ -103,7 +103,7 @@ for train_idx, test_idx in skf.split(x, y):
     pred_proba = mlp.predict(rm_nv_vectors)
     pred_rank = get_pred_rank(pred_proba, num=MODEL_PARAMS["topn"])
     predicted_label_ranks = []
-    for _ in MODEL_PARAMS["topn"]:
+    for _ in range(MODEL_PARAMS["topn"]):
         predicted_label_ranks.append([])
     predicted_label_ranks = np.array(predicted_label_ranks)
     predicted_label_ranks = predicted_label_ranks.T
