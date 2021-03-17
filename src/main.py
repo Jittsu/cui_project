@@ -33,6 +33,17 @@ project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
 sys.path.append(project_root)
 from version import __version__
 
+# 関数 ---
+def get_pred_rank(predicted, num=6):
+    use_predicted = predicted.copy()
+    ret_values = []
+    for _ in range(num):
+        max_idx = use_predicted.argmax(axis=-1)
+        for i, pred in enumerate(max_idx):
+            use_predicted[i][pred] = 0
+        ret_values.append(max_idx)
+    return np.array(ret_values)
+
 # データ読み込み ---
 
 if 'har' in FILE_PATH:
@@ -65,19 +76,19 @@ for intent in y:
 y_id = np.array([y2id[intent] for intent in y])
 y_onehot = np_utils.to_categorical(y_id, len(collections.Counter(y)))
 scores = []
+cui_scores = []
 for train_idx, test_idx in skf.split(x, y):
     tv = TokenVectorizer(list(x[train_idx]), use_pos=[], stopword=True, stemming=True, as_numpy=True)
     train_vec = tv.vectorizer()
     in_seq_size = len(train_vec[0])
     model = MLP(in_seq=in_seq_size, out_vec_size=len(collections.Counter(y)), dropout_rate=0.2, loss=MODEL_PARAMS['loss'], optimizer=MODEL_PARAMS['optimizer'])
     mlp = model.build_model()
-    #mlp.fit(train_vec, y_onehot[train_idx], batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
+    mlp.fit(train_vec, y_onehot[train_idx], batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
     test_vec = tv.vectorizer(x[test_idx])
-    #score = mlp.evaluate(test_vec, y_onehot[test_idx])
-    #scores.append(score[1])
-    #print(f'SCORE: {score[1]}')
-    #mlp.save(f'../models/mlp_split{split_cnt}.h5', include_optimizer=False)
-    split_cnt += 1
+    score = mlp.evaluate(test_vec, y_onehot[test_idx])
+    scores.append(score[1])
+    print(f'SCORE: {score[1]}')
+    mlp.save(f'../models/mlp_split{split_cnt}.h5', include_optimizer=False)
 
     # CUI訓練用データ作成部 ---
     rm_nv_tokens, _ = tv.rm_nv_tokenizer(y_id[train_idx])
@@ -88,9 +99,51 @@ for train_idx, test_idx in skf.split(x, y):
     for token in rm_nv_tokens:
         multi_label = multi_label_dict[token]
         rm_nv_multi_labels.append(multi_label)
-    print(rm_nv_multi_labels)
-    break
+
+    pred_proba = mlp.predict(rm_nv_vectors)
+    pred_rank = get_pred_rank(pred_proba, num=MODEL_PARAMS["topn"])
+    predicted_label_ranks = []
+    for _ in MODEL_PARAMS["topn"]:
+        predicted_label_ranks.append([])
+    predicted_label_ranks = np.array(predicted_label_ranks)
+    predicted_label_ranks = predicted_label_ranks.T
+
+    cui_labels = []
+    for p_label, m_label in zip(predicted_label_ranks, rm_nv_multi_labels):
+        m_label_l = m_label.split(';')
+        if str(p_label) == m_label_l[0]:
+            cui_labels.append(0)
+        elif str(p_label) in m_label_l:
+            cui_labels.append(1)
+        else:
+            cui_labels.append(2)
 
     # CUI分類モデル作成部 ---
+    cui_onehot = np_utils.to_categorical(cui_labels, 3)
+    model = CUIMLP(in_seq=in_seq_size, dropout_rate=0.2, loss=MODEL_PARAMS['loss'], optimizer=MODEL_PARAMS['optimizer'])
+    cuimlp = model.build_model()
+    cuimlp.fit(rm_nv_vectors, cui_onehot, batch_size=MODEL_PARAMS['batch_size'], epochs=MODEL_PARAMS['epochs'], verbose=1)
+    pred_cui = cuimlp.predict_classes(test_vec)
+    pred_class = mlp.predict_classes(test_vec)
+    test_label = y[test_idx]
+    collect_num = 0
+    for p_cui, p_class, t_label in zip(pred_cui, pred_class, test_label):
+        if str(p_class) == str(t_label):
+            collect_num += 1
+        elif str(pred_cui) == 2:
+            collect_num += 1
+        else:
+            pass
+    cuiscore = collect_num/len(test_label)
+    cui_scores.append(cuiscore[1])
+    print(f'epoch:{split_cnt}')
+    print(f'normal score: {score[1]}')
+    print(f'cui score: {cuiscore[1]}')
+    cuimlp.save(f'../models/cuimlp_split{split_cnt}.h5', include_optimizer=False)
+    split_cnt += 1
 
-# 予測部
+scores = np.array(scores)
+cui_scores = np.array(cui_scores)
+print('final score')
+print(f'normal score: {scores.mean()}')
+print(f'cui score: {cui_scores.mean()}')
