@@ -110,20 +110,19 @@ for train_idx, test_idx in skf.split(x, y):
     del pred_rank2label, pred_ranks2label, pred_ranks
     gc.collect()
     predicted_label_ranks = predicted_label_ranks.T
-    print(predicted_label_ranks[0])
-    print(len(predicted_label_ranks))
 
     cui_labels = []
     for p_label, m_label in zip(predicted_label_ranks, rm_nv_multi_labels):
         m_label_l = m_label.split(';')
+        print(p_label, m_label_l)
+        break
         if str(p_label) == m_label_l[0]:
             cui_labels.append(0)
         elif str(p_label) in m_label_l:
             cui_labels.append(1)
         else:
             cui_labels.append(2)
-    print(len(cui_labels))
-
+    sys.exit(0)
     # CUI分類モデル作成部 ---
     cui_onehot = np_utils.to_categorical(cui_labels, 3)
     model = CUIMLP(in_seq=in_seq_size, dropout_rate=0.2, loss=MODEL_PARAMS['loss'], optimizer=MODEL_PARAMS['optimizer'])
