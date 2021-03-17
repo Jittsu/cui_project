@@ -101,11 +101,14 @@ for train_idx, test_idx in skf.split(x, y):
         rm_nv_multi_labels.append(multi_label)
 
     pred_proba = mlp.predict(rm_nv_vectors)
-    pred_rank = get_pred_rank(pred_proba, num=MODEL_PARAMS["topn"])
-    predicted_label_ranks = []
-    for _ in range(MODEL_PARAMS["topn"]):
-        predicted_label_ranks.append([])
-    predicted_label_ranks = np.array(predicted_label_ranks)
+    pred_ranks = get_pred_rank(pred_proba, num=MODEL_PARAMS["topn"])
+    pred_ranks2label = []
+    for pred_rank in pred_ranks:
+        pred_rank2label = [id2y[i] for i in pred_rank]
+        pred_ranks2label.append(pred_rank2label)
+    predicted_label_ranks = np.array(pred_ranks2label)
+    del pred_rank2label, pred_ranks2label, pred_ranks
+    gc.collect()
     predicted_label_ranks = predicted_label_ranks.T
     print(predicted_label_ranks[0])
     print(len(predicted_label_ranks))
