@@ -114,7 +114,6 @@ for train_idx, test_idx in skf.split(x, y):
             cui_labels.append(1)
         else:
             cui_labels.append(2)
-        break
     
     # CUI分類モデル作成部 ---
     cui_onehot = np_utils.to_categorical(cui_labels, 3)
