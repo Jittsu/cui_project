@@ -115,8 +115,7 @@ for train_idx, test_idx in skf.split(x, y):
         else:
             cui_labels.append(2)
         break
-    print(cui_labels)
-    sys.exit(0)
+    
     # CUI分類モデル作成部 ---
     cui_onehot = np_utils.to_categorical(cui_labels, 3)
     model = CUIMLP(in_seq=in_seq_size, dropout_rate=0.2, loss=MODEL_PARAMS['loss'], optimizer=MODEL_PARAMS['optimizer'])
