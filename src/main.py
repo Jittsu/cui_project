@@ -125,17 +125,21 @@ for train_idx, test_idx in skf.split(x, y):
     test_label = y[test_idx]
     collect_num = 0
     for p_cui, p_class, t_label in zip(pred_cui, pred_class, test_label):
-        if str(p_class) == str(t_label):
-            collect_num += 1
-        elif str(pred_cui) == 2:
-            collect_num += 1
+        if not p_cui == 2:
+            if str(p_class) == str(t_label):
+                collect_num += 1
+            else:
+                pass
         else:
-            pass
+            if not str(p_class) == str(t_label):
+                collect_num += 1
+            else:
+                pass
     cuiscore = collect_num/len(test_label)
-    cui_scores.append(cuiscore[1])
+    cui_scores.append(cuiscore)
     print(f'epoch:{split_cnt}')
     print(f'normal score: {score[1]}')
-    print(f'cui score: {cuiscore[1]}')
+    print(f'cui score: {cuiscore}')
     cuimlp.save(f'../models/cuimlp_split{split_cnt}.h5', include_optimizer=False)
     split_cnt += 1
 
