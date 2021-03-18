@@ -153,7 +153,7 @@ for train_idx, test_idx in skf.split(x, y):
 scores = np.array(scores)
 cui_scores = np.array(cui_scores)
 print('final score')
-for i in range(MODEL_PARAMS["epochs"]):
+for i in range(MODEL_PARAMS["split_num"]):
     print(f'split{i+1}')
     print(f'normal score: {scores[i]}')
     print(f'cui score: {cui_scores[i]}')
