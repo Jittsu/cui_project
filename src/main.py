@@ -110,7 +110,7 @@ for train_idx, test_idx in skf.split(x, y):
     for p_label, m_label in zip(predicted_label_ranks, rm_nv_multi_labels):
         m_label_l = m_label.split(';')
         m_label_l = [str(ml) for ml in m_label_l]
-        p_label = [str(pl for pl in p_label)]
+        p_label = np.array([str(pl) for pl in p_label])
         print(p_label)
         print(m_label_l)
         if str(p_label[0]) in m_label_l:
