@@ -142,6 +142,12 @@ for train_idx, test_idx in skf.split(x, y):
     print(f'cui score: {cuiscore}')
     cuimlp.save(f'../models/cuimlp_split{split_cnt}.h5', include_optimizer=False)
     split_cnt += 1
+    df = pd.DataFrame()
+    df['cui'] = pred_cui
+    df['pred'] = pred_class
+    df['label'] = test_label
+    df.to_csv('out.csv', index=False)
+    break
 
 scores = np.array(scores)
 cui_scores = np.array(cui_scores)
