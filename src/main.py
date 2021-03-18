@@ -109,11 +109,11 @@ for train_idx, test_idx in skf.split(x, y):
     i = 0
     for p_label, m_label in zip(predicted_label_ranks, rm_nv_multi_labels):
         m_label_l = m_label.split(';')
-        m_label_l = [str(ml) for ml in m_label_l]
-        p_label = np.array([str(pl) for pl in p_label])
+        m_label_l = [int(ml) for ml in m_label_l]
+        p_label = np.array([int(pl) for pl in p_label])
         print(p_label)
         print(m_label_l)
-        if str(p_label[0]) in m_label_l:
+        if p_label[0] in m_label_l:
             cui_labels.append(0)
         elif p_label.any() in m_label_l:
             cui_labels.append(1)
