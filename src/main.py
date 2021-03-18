@@ -149,11 +149,14 @@ for train_idx, test_idx in skf.split(x, y):
     df['cui'] = pred_cui
     df['pred'] = pred_class
     df['label'] = test_label
-    df.to_csv('out.csv', index=False)
-    break
 
 scores = np.array(scores)
 cui_scores = np.array(cui_scores)
 print('final score')
+for i in range(MODEL_PARAMS["epoch"]):
+    print(f'split{i+1}')
+    print(f'normal score: {scores[i]}')
+    print(f'cui score: {cui_scores[i]}')
+print('final score(mean)')
 print(f'normal score: {scores.mean()}')
 print(f'cui score: {cui_scores.mean()}')
