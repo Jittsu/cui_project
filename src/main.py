@@ -118,6 +118,7 @@ for train_idx, test_idx in skf.split(x, y):
         else:
             cui_labels.append(2)
         print(cui_labels)
+        i += 1
         if i == 5:
             break
     
