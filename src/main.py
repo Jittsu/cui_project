@@ -115,7 +115,7 @@ for train_idx, test_idx in skf.split(x, y):
         print(m_label_l)
         if p_label[0] in m_label_l:
             cui_labels.append(0)
-        elif p_label.any() in m_label_l:
+        elif len(set(p_label) & set(m_label_l)) > 0:
             cui_labels.append(1)
         else:
             cui_labels.append(2)
