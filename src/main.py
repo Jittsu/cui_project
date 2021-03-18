@@ -126,7 +126,7 @@ for train_idx, test_idx in skf.split(x, y):
     pred_class = mlp.predict_classes(test_vec)
     test_label = y[test_idx]
     collect_num = 0
-    test_label = [y2id(l) for l in test_label]
+    test_label = [y2id[l] for l in test_label]
     for p_cui, p_class, t_label in zip(pred_cui, pred_class, test_label):
         if not p_cui == 2:
             if str(p_class) == str(t_label):
