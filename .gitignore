@@ -3,3 +3,5 @@ src/__pycache__/
 data/har-aug/
 data/oos-eval/
 data/snips-aug/
+makegraph.ipynb
+result.pdf
