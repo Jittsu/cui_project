@@ -110,12 +110,19 @@ for train_idx, test_idx in skf.split(x, y):
         m_label_l = m_label.split(';')
         m_label_l = [int(ml) for ml in m_label_l]
         p_label = np.array([int(pl) for pl in p_label])
-        if p_label[0] in m_label_l:
-            cui_labels.append(0)
-        elif len(set(p_label) & set(m_label_l)) > 0:
-            cui_labels.append(1)
+        if not MODEL_PARAMS['topn'] == 1:
+            if p_label[0] in m_label_l:
+                cui_labels.append(0)
+            elif len(set(p_label) & set(m_label_l)) > 0:
+                cui_labels.append(1)
+            else:
+                cui_labels.append(2)
         else:
-            cui_labels.append(2)
+            if p_label[0] in m_label_l:
+                cui_labels.append(0)
+            else:
+                cui_labels.append(2)
+
     
     # CUI分類モデル作成部 ---
     cui_onehot = np_utils.to_categorical(cui_labels, 3)

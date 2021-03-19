@@ -14,4 +14,4 @@ MODEL_PARAMS["loss"] = "categorical_crossentropy" # 損失関数 ---
 MODEL_PARAMS["optimizer"] = "adam" # 勾配計算 ---
 MODEL_PARAMS["batch_size"] = 16 # バッチサイズ ---
 MODEL_PARAMS["epochs"] = 3 # エポック数 ---
-MODEL_PARAMS["topn"] = 5 # CUIラベル作成時に利用する回答数 ---
+MODEL_PARAMS["topn"] = 1 # CUIラベル作成時に利用する回答数 ---
