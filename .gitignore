@@ -5,3 +5,4 @@ data/oos-eval/
 data/snips-aug/
 makegraph.ipynb
 result.pdf
+.DS_Store/
